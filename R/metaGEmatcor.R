@@ -91,12 +91,13 @@ FastKerFdr <- function(Z,p0,plotting=FALSE,NbKnot=1e5,tol = 1e-5){
 #' @param Zmat A matrix containing the Zscore (in rows) for each environment (in columns)
 #' @param Threshold Threshold on posteriors (to be H1) to filter markers for correlation computation (0.6 by default)
 #' @param plotting A boolean saying to plot or not (FALSE by default)
+#' @param Cores The number of cores to used, optional. By default, availableCores()-1 cores is used.
 #' @return  A vector of index of markers which seems not significant (under H0)
 #' @import future
 #' @importFrom stats qnorm
 
 
-GetH0Items <- function(Zmat, Threshold=0.8, plotting=FALSE){
+GetH0Items <- function(Zmat, Threshold=0.8, plotting=FALSE,Cores=NULL){
 
   Zmat <- Zmat %>% as.matrix
   n <- nrow(Zmat)
@@ -111,7 +112,11 @@ GetH0Items <- function(Zmat, Threshold=0.8, plotting=FALSE){
   }
 
   ## Fit a 2-component mixture to each test serie using kerFdr
-  future::plan(multicore(workers= availableCores()-1))
+  if(is.null(Cores) & future::availableCores()>1){
+    future::plan(multicore(workers= availableCores()-1))
+  }else if(Cores>0){
+    future::plan(multicore(workers= Cores))
+  }
   GetTheTaus <- purrr::map(1:Q, ~ FastKerFdr(Zmat[, .x], p0=p0[.x], plotting=FALSE))
   plan("default")
 
@@ -138,6 +143,7 @@ GetH0Items <- function(Zmat, Threshold=0.8, plotting=FALSE){
 #' @param Data A dataset containing the effects and pvalues of each marker (in rows) in each environment (in columns) as obtained by metaGE.collect
 #' @param Threshold Threshold on posteriors (to be H1) to filter markers before computing correlation (0.6 by default)
 #' @param NA.omit A boolean: should the NA be removed for the inter-environment correlation matrix computation (default=TRUE)
+#' @param Cores The number of cores to used, optional. By default, availableCores()-1 cores is used.
 #' @return  The inter-environment correlation matrix
 #' @import dplyr tidyr corrplot
 #' @importFrom stats qnorm cor
@@ -151,7 +157,8 @@ GetH0Items <- function(Zmat, Threshold=0.8, plotting=FALSE){
 
 metaGE.cor<- function(Data,
                          Threshold = 0.6,
-                         NA.omit = TRUE) {
+                         NA.omit = TRUE,
+                         Cores=NULL) {
   ## Get the data
   Data <- dplyr::select(Data, contains('EFFECT.'), contains('PVAL.'))
   if (NA.omit) {
@@ -177,7 +184,7 @@ metaGE.cor<- function(Data,
 
   ### Filter the H1 guys if required
   if (!is.null(Threshold) & Threshold != 0) {
-    H0List <- GetH0Items(Zmat, Threshold)
+    H0List <- GetH0Items(Zmat = Zmat,Threshold =  Threshold, Cores = Cores)
   } else{
     H0List <- list(1:nrow(Zmat))
   }

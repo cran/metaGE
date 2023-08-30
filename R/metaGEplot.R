@@ -67,6 +67,8 @@ metaGE.pvalplot <- function(Pvalues, Main=''){
 }
 
 
+
+
 #' Draw the heatmap to see markers effects across environments.
 #'
 #' The function metaGE.heatmap displays the heatmap of the zscores, the estimated marker effects or the pvalues of each markers (in rows) in each environments (in columns).
@@ -76,13 +78,13 @@ metaGE.pvalplot <- function(Pvalues, Main=''){
 #' @param QTLsVarName The name of the column indicating to which QTL the marker belongs.  (optional)
 #' @param RowOrder A boolean specifying whether to reorder the markers or not. (TRUE by default)
 #' @param ColOrder A boolean specifying whether to reorder the environments or not. (TRUE by default)
-#' @param ShowDendogram A boolean specifying wether to show the clustering of the rows and/or the columns. (FALSE by default)
-#' @param Colors A vector of three colors corresponding to the
+#' @param ShowDendrogram A boolean specifying wether to show the clustering of the rows and/or the columns. (FALSE by default)
+#' @param Colors A vector of three colors corresponding to the color scale of the Heatmap.
+#' @param Main The main to display.(optional)
 #' @return The heatmap
 #' @export
-#' @importFrom ComplexHeatmap Heatmap
-#' @importFrom circlize colorRamp2
-#' @importFrom grid gpar
+#' @importFrom gplots heatmap.2
+#' @importFrom grDevices colorRampPalette
 #' @examples
 #' require(dplyr)
 #' # Import the data
@@ -102,15 +104,15 @@ metaGE.pvalplot <- function(Pvalues, Main=''){
 #'heatmap <- metaGE.heatmap(Data = FeDF[Signif,],
 #'                          Prefix = "Z.")
 
-metaGE.heatmap <- function(Data, Prefix='Z.', EnvGroups=NULL, QTLsVarName=NULL,RowOrder=TRUE, ColOrder = TRUE, ShowDendogram=FALSE, Colors=c("red","black","green")){
-
+metaGE.heatmap <- function(Data, Prefix='Z.', EnvGroups=NULL, QTLsVarName=NULL,RowOrder=TRUE, ColOrder = TRUE,ShowDendrogram=FALSE, Colors=c("red","black","green"),Main=""){
+  
   ## Checkings
-
+  
   ### Checkings on Data
   if((!is_tibble(Data))&(!is.data.frame(Data))){
     stop('Data should be either a data.frame or a tibble')
   }
-
+  
   ### Checkings on Prefix
   NbScoreCols <- names(Data) %>%
     str_detect(pattern = Prefix) %>%
@@ -121,71 +123,98 @@ metaGE.heatmap <- function(Data, Prefix='Z.', EnvGroups=NULL, QTLsVarName=NULL,R
     ColNames <- names(Data) %>%
       .[str_which(.,pattern = Prefix)]
   }
-
+  
   ### Checkings on Groups
   if(!is.null(EnvGroups)){
     if(!is.data.frame(EnvGroups)){
       stop('EnvGroups should be a dataframe.')
     }else{
-      ColNames.sel <- EnvGroups[,1] %>%
-        paste0(Prefix,.) %>%
+      EnvGroups <- EnvGroups %>%  as.matrix()
+      EnvInGroups <- map(unique(EnvGroups[,2]) ,~EnvGroups[which(EnvGroups[,2]==.x),1])
+      ColNames.sel <- EnvInGroups %>% 
+        reduce(c) %>%
+        paste0(Prefix,.) %>% 
         intersect(.,ColNames)
-      ColumnSplit <- EnvGroups[,2]
+      NbEnvPerGroups <- map_int(EnvInGroups,length) %>% 
+        cumsum
+      ColOrder <- FALSE
       if(is_empty(ColNames.sel)){
         stop('Environments in EnvGroups do not match with column names in Data.')
       }
+      # ColLabel <- rep("",sum(NbEnvPerGroups))
+      # ColLabel[cumsum(NbEnvPerGroups)%/%2]<- unique(EnvGroups[,2])
     }
   } else {
     ColNames.sel <- ColNames
-    ColumnSplit <- NULL
+    EnvInGroups <- NULL
+    NbEnvPerGroups <- c(length(ColNames.sel))
   }
-
-
+  
+  
   ### Checkings on QTLs
   if(!is.null(QTLsVarName)){
     if(!(QTLsVarName %in% colnames(Data))){
       stop(paste0(QTLsVarName,' is not a column in Data.'))
     }else {
-      QTLs_names <- unique(Data %>% pull(QTLsVarName)) %>% as.character()
-      RowSplit <- Data %>% pull(QTLsVarName)
+      ### Ordering the markers
+      Data <-Data %>% arrange(QTLsVarName)
+      QTLs <- Data %>% pull(QTLsVarName)
+      QTLs_names <- unique(QTLs) %>% as.character()
+      RowSplit <- map_int(QTLs_names,~length(which(QTLs==.x))) %>% 
+        cumsum
+      RowOrder <- FALSE
+      Rowlabel <- rep("",sum(RowSplit))
+      Rowlabel[cumsum(RowSplit)%/%2]<-paste0("QTL_",QTLs_names)
     }
   }else{
     ### Ordering the markers
     Data <-Data %>% arrange(.data$CHR, .data$POS)
     QTLs_names <- character(0)
     RowSplit <- NULL
+    Rowlabel <- rep("",nrow(Data))
   }
-
-
+  
+  
   ## Select columns if needed
   Dataheat <- Data %>% select(one_of(ColNames.sel))
-
+  
   ## Build the HmMatrix
   HmMatrix <- Dataheat %>% as.matrix
-
+  colnames(HmMatrix) <- colnames(HmMatrix) %>% str_remove_all(pattern = Prefix)
+  
+  
+  if(!ShowDendrogram | (!RowOrder & !ColOrder)){
+    dendrogram.plot <- "none"
+  }else if(RowOrder & ColOrder){
+    dendrogram.plot <- "both"
+  }else if(RowOrder){
+    dendrogram.plot <- "row"
+  }else{
+    dendrogram.plot <- "column"
+  }
+  
   ## At least 2 markers ?
   if(nrow(HmMatrix)<2){
-    stop('At least 2 rows required to draw a heatmap')
+    message('At least 2 rows required to draw a heatmap')
   }else{
-    if(min(HmMatrix)<0 & max(HmMatrix)>0){
-      color_fun <- circlize::colorRamp2(c(min(HmMatrix), 0, max(HmMatrix)), Colors)
-    }else{
-      color_fun <- circlize::colorRamp2(c(-max(abs(HmMatrix)), 0, max(abs(HmMatrix))), Colors)
-    }
-    HM <- ComplexHeatmap::Heatmap(HmMatrix, name="Z-score", col=color_fun,
-                                  row_title = QTLs_names, row_title_rot = 0,
-                                  cluster_rows = RowOrder, cluster_columns = ColOrder, show_row_dend = ShowDendogram,show_column_dend = ShowDendogram,
-                                  row_split = RowSplit ,column_split = ColumnSplit,
-                                  row_gap = unit(3, "mm"), column_gap =  unit(2, "mm"),
-                                  row_title_gp = grid::gpar(cex=2),column_names_gp = grid::gpar(cex=2),column_title_gp = grid::gpar(cex=1.5),
-                                  heatmap_legend_param = list( grid_width = unit(1, "cm"),legend_height = unit(7, "cm"),labels_gp=grid::gpar(cex=1.5),title_gp=gpar(cex=2)))
-
-
+    Col.pal <- grDevices::colorRampPalette(Colors)(100)
+    class(HmMatrix) <- 'numeric'
+    HM <-suppressWarnings( gplots::heatmap.2(HmMatrix,
+                                             col = Col.pal,
+                                             Rowv = RowOrder,
+                                             Colv = ColOrder,
+                                             dendrogram = dendrogram.plot,
+                                             sepwidth = c(0.05, 0.3),
+                                             trace = 'none',
+                                             labRow = Rowlabel,
+                                             main = Main,
+                                             colsep = NbEnvPerGroups,
+                                             rowsep = RowSplit,
+                                             density.info = "none",key.title = NA,keysize = 1,margins = c(5,7) ))
     return(HM)
   }
+  
 }
-
-
 
 #' Draw the Manhattan plot.
 #'
@@ -227,14 +256,14 @@ metaGE.heatmap <- function(Data, Prefix='Z.', EnvGroups=NULL, QTLsVarName=NULL,R
 #'
 #'
 #'# Compute the score local
-#' xi <- 2
+#' \dontrun{xi <- 2
 #' FeScore <- metaGE.lscore(FeDF,"PVALUE", xi)
 #'
 #' # Draw the corresponding manhattan plot
 #' manhattan_lscore <- metaGE.manhattan(Data = FeScore$Data,VarName = 'SCORE',
 #'                                      SigZones = FeScore$SigZones, Score = TRUE,
 #'                                      Main = 'Local score alongside the chromosome Fe method')
-#'
+#'}
 #'
 #'
 #'
@@ -389,7 +418,7 @@ metaGE.manhattan <- function(Data, VarName, Threshold=NULL,SigZones=NULL,Score =
   #             legend.text=element_text(size=12*Coef),
   #             legend.title = element_text(size=15*Coef))
 
-  return(manhattan+ ylim(Ylim))
+  return(manhattan+ ylim(Ylim)+ggtitle(Main))
 
 }
 

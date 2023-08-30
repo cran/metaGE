@@ -4,7 +4,7 @@
 \alias{GetH0Items}
 \title{GetH0Items}
 \usage{
-GetH0Items(Zmat, Threshold = 0.8, plotting = FALSE)
+GetH0Items(Zmat, Threshold = 0.8, plotting = FALSE, Cores = NULL)
 }
 \arguments{
 \item{Zmat}{A matrix containing the Zscore (in rows) for each environment (in columns)}
@@ -12,6 +12,8 @@ GetH0Items(Zmat, Threshold = 0.8, plotting = FALSE)
 \item{Threshold}{Threshold on posteriors (to be H1) to filter markers for correlation computation (0.6 by default)}
 
 \item{plotting}{A boolean saying to plot or not (FALSE by default)}
+
+\item{Cores}{The number of cores to used, optional. By default, availableCores()-1 cores is used.}
 }
 \value{
 A vector of index of markers which seems not significant (under H0)

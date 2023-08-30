@@ -125,6 +125,7 @@ sig_sl=function(lind,pos, th){
 #' @export
 #' @examples
 #' require(dplyr)
+#' \dontrun{
 #' # Import the data
 #' data("metaData")
 #'
@@ -137,7 +138,7 @@ sig_sl=function(lind,pos, th){
 #' # Compute the score local
 #' xi <- 2
 #' FeScore <- metaGE.lscore(FeDF,"PVALUE", xi)
-#' #FeScore$SigZones
+#' #FeScore$SigZones}
 
 
 metaGE.lscore <- function(Data,PvalName,xi){

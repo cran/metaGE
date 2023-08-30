@@ -11,8 +11,9 @@ metaGE.heatmap(
   QTLsVarName = NULL,
   RowOrder = TRUE,
   ColOrder = TRUE,
-  ShowDendogram = FALSE,
-  Colors = c("red", "black", "green")
+  ShowDendrogram = FALSE,
+  Colors = c("red", "black", "green"),
+  Main = ""
 )
 }
 \arguments{
@@ -28,9 +29,11 @@ metaGE.heatmap(
 
 \item{ColOrder}{A boolean specifying whether to reorder the environments or not. (TRUE by default)}
 
-\item{ShowDendogram}{A boolean specifying wether to show the clustering of the rows and/or the columns. (FALSE by default)}
+\item{ShowDendrogram}{A boolean specifying wether to show the clustering of the rows and/or the columns. (FALSE by default)}
 
-\item{Colors}{A vector of three colors corresponding to the}
+\item{Colors}{A vector of three colors corresponding to the color scale of the Heatmap.}
+
+\item{Main}{The main to display.(optional)}
 }
 \value{
 The heatmap

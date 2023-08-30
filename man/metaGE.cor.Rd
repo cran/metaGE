@@ -4,7 +4,7 @@
 \alias{metaGE.cor}
 \title{Infer inter-environment correlation matrix}
 \usage{
-metaGE.cor(Data, Threshold = 0.6, NA.omit = TRUE)
+metaGE.cor(Data, Threshold = 0.6, NA.omit = TRUE, Cores = NULL)
 }
 \arguments{
 \item{Data}{A dataset containing the effects and pvalues of each marker (in rows) in each environment (in columns) as obtained by metaGE.collect}
@@ -12,6 +12,8 @@ metaGE.cor(Data, Threshold = 0.6, NA.omit = TRUE)
 \item{Threshold}{Threshold on posteriors (to be H1) to filter markers before computing correlation (0.6 by default)}
 
 \item{NA.omit}{A boolean: should the NA be removed for the inter-environment correlation matrix computation (default=TRUE)}
+
+\item{Cores}{The number of cores to used, optional. By default, availableCores()-1 cores is used.}
 }
 \value{
 The inter-environment correlation matrix

@@ -67,14 +67,14 @@ Signif <-  FeDF$PVALUE \%>\% p.adjust(method = "BH") \%>\% `<`(Alpha) \%>\% whic
 
 
 # Compute the score local
-xi <- 2
+\dontrun{xi <- 2
 FeScore <- metaGE.lscore(FeDF,"PVALUE", xi)
 
 # Draw the corresponding manhattan plot
 manhattan_lscore <- metaGE.manhattan(Data = FeScore$Data,VarName = 'SCORE',
                                      SigZones = FeScore$SigZones, Score = TRUE,
                                      Main = 'Local score alongside the chromosome Fe method')
-
+}
 
 
 
