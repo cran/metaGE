@@ -112,9 +112,11 @@ GetH0Items <- function(Zmat, Threshold=0.8, plotting=FALSE,Cores=NULL){
   }
 
   ## Fit a 2-component mixture to each test serie using kerFdr
-  if(is.null(Cores) & future::availableCores()>1){
-    future::plan(multicore(workers= availableCores()-1))
-  }else if(Cores>0){
+  if(is.null(Cores)){
+    if(future::availableCores()>2){
+      future::plan(multicore(workers= availableCores()-1))
+    }
+  }else if(Cores>1){
     future::plan(multicore(workers= Cores))
   }
   GetTheTaus <- purrr::map(1:Q, ~ FastKerFdr(Zmat[, .x], p0=p0[.x], plotting=FALSE))
