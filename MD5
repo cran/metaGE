@@ -1,10 +1,10 @@
-4aa1cded68fa7e9fcedf1b0b59ecd0da *DESCRIPTION
+d997aba7f8871dc1da57c278249b0fe9 *DESCRIPTION
 5170d749ab927c8932075751276f750c *NAMESPACE
 e133fdce0f57318c1f8aa03090ccf811 *R/data.R
 1b54137d4ae82b40a266122de6d1201b *R/metaGE-package.R
 ef29e40441170317e65cc681b6c5b6d0 *R/metaGEcollect.R
 670934d2c19411359fa30cdef73d6921 *R/metaGEfit.R
-d26ecb22537d34b679eacbe9fb622327 *R/metaGEmatcor.R
+8eaa50bcaaccae25c41508b33a0070d3 *R/metaGEmatcor.R
 9babeae5e2d055c11e2e63e02f91927a *R/metaGEplot.R
 280ca7c1176361d987fc63b42e04974b *R/metaGEscore.R
 b119f48bcf5bb94eeb2ff9a150ec499b *R/metaGEtest.R
@@ -14,7 +14,7 @@ cb4924f3573383fca290a0a8e2ca5294 *build/partial.rdb
 de96c1eb7da8e50c2beaf729f9ba10df *data/metaData.rda
 2bc4d3c8b12233de76d2fb3519fe8037 *inst/doc/metaGE-vignette.R
 4290ed896cac690ef5f7d209810b93fe *inst/doc/metaGE-vignette.Rmd
-28cf9b9791ea88425ad8e6418824fa57 *inst/doc/metaGE-vignette.html
+fd06f345f6929d9bff81f81cc93b3cdc *inst/doc/metaGE-vignette.html
 e08464f917446f4b55d7e0aa9665402b *inst/extdata/Gai12R_3DF.txt
 0cf74f86b1bae4773eb2eea00ca59d76 *inst/extdata/Gai12W_3DF.txt
 605b41c3785067c3903738bddb3c187d *inst/extdata/Gai13R_3DF.txt
