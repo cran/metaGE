@@ -7,23 +7,23 @@
 metaGE.fit(Data, MatCorr, Method, NA.omit = TRUE, DropZScores = FALSE)
 }
 \arguments{
-\item{Data}{A dataset containing the estimated marker effect and its associated pvalue of each marker (in rows) in each environment (in columns), as obtained from metaGE.collect.}
+\item{Data}{A dataset containing the estimated marker effect and its associated pvalue of each marker (in rows) in each environment (in columns), as obtained from \code{\link[=metaGE.collect]{metaGE.collect()}}.}
 
-\item{MatCorr}{The inter-environments correlation matrix. Can be computed using metaGE.cor.}
+\item{MatCorr}{The inter-environments correlation matrix. Can be computed using \code{\link[=metaGE.cor]{metaGE.cor()}}.}
 
-\item{Method}{A string specifying the method to be performed: either 'Fe' or 'Re'.}
+\item{Method}{A string specifying the method to be performed: either "\code{Fe}" or "\code{Re}".}
 
-\item{NA.omit}{A boolean specifying whether the markers with some NA values should be removed. (TRUE by default)}
+\item{NA.omit}{A boolean specifying whether the markers with some \code{NA} values should be removed. (\code{TRUE} by default)}
 
-\item{DropZScores}{A boolean specifying whether the Zscores should be dropped from the dataset or not.(FALSE by default)}
+\item{DropZScores}{A boolean specifying whether the Zscores should be dropped from the dataset or not.(\code{FALSE} by default)}
 }
 \value{
-The dataset Data with supplementary  columns:
+The dataset Data with supplementary columns:
 \itemize{
-\item Mu: Estimation of Mu,
-\item Tau: Estimation of Tau, the heterogeneity,
-\item Pvalue: The Pvalue of the test,
-\item the Zscores for each environment if DropLocalScores = FALSE.
+\item PVALUE: The pvalue of the MA test,
+\item Mu: Estimate of the mean marker effect,
+\item Tau: Estimate of the variance of the marker effect, for the Random model only,
+\item the Zscores for each environment if \code{DropZScores = FALSE}.
 }
 }
 \description{

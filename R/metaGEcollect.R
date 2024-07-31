@@ -10,7 +10,7 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(".",":=",".x",">"))
 #' This function read the one file, select interesting columns and rename them.
 #' @param ListN The name of the list of files where the file to read belongs or NULL if there is only one list of files
 #' @param FileN The name of the file to read
-#' @param VarN A named list containing the column names in the file corresponding to the variables below: MARKER, CHR, POS, EFFECT, EFFECT_SE, PVAL,(optional: FREQ, ALLELE0, ALLELE1, wEIGHT)
+#' @param VarN A named list containing the column names in the file corresponding to the variables below: MARKER, CHR, POS, EFFECT, PVAL. (optional: FREQ, ALLELE0, ALLELE1)
 #' @param MinFreq A numeric value allowing to filter to keep markers with MAF > MinFreq
 #' @return  A tibble with the interesting columns selected and renamed.
 #' @import stringr dplyr
@@ -73,29 +73,38 @@ ReadData <- function(ListN, FileN, VarN, MinFreq=0){
 #'
 #' @description This function merges files containing the summary statistics of GWAS in different environments (one file per environment).
 #' @details Each file MUST contain the variables below:
-#' * MARKER =  marker,
-#' * CHR = the chromosome ,
-#' * POS = the position of the marker on the chromosome,
-#' * EFFECT = the mean effect of the marker,
-#' * EFFECT_SE = the standard error of the mean effect,
-#' * PVAL = the pvalue of the mean effect.
+#' \itemize{
+#' \item MARKER: the marker name
+#' \item CHR: the chromosome
+#' \item POS: the position of the marker
+#' \item EFFECT: the mean effect of the marker
+#' \item PVAL: the pvalue
+#' }
+#' 
 #' Each file might contain the variables:
-#' * FREQ = MAF
-#' * ALLELE0
-#' * ALLELE1
-#' * WEIGHT
+#' \itemize{
+#' \item FREQ: MAF
+#' \item ALLELE0: Allele coding for allele 0
+#' \item ALLELE1: Allele coding for allele 1
+#' }
+#' 
+#' 
 #' @param FileNames A list containing the file paths to merge (one trait only) or a list of such lists
-#' @param VariableNames A named list containing the column names in the original files corresponding to the variables below:
-#' * MARKER, CHR, POS, EFFECT, EFFECT_SE, PVAL,
-#' * (optional: FREQ, ALLELE0, ALLELE1, WEIGHT)
-#'  or a list of such lists.
+#' @param VariableNames A named list containing the column names in the original files corresponding 
+#' to the variables : MARKER, CHR, POS, EFFECT, PVAL (optional: FREQ, ALLELE0, ALLELE1) ; or a list of such lists.
 #' @param MinFreq A numeric value allowing to filter markers based on the maf. (optional)
-#' @param DropDuplicates A boolean indicating whether duplicate markers should be removed or not. (TRUE by default)
-#' @param Verbose A boolean indicating whether progression messages should be printed or not. (FALSE by default)
-#' @param NA.rmv  A boolean should the NA be removed or not (TRUE by default)
-#' @return  A list of:
-#' * Data ->  a tibble containing all the columns of interest of all the files from FileNames,
-#' * RemovedMarkers -> same kind of tibble, but containing the markers that have been removed due to unclear allele coding.
+#' @param DropDuplicates A boolean indicating whether duplicate markers should be removed or not. (\code{TRUE} by default)
+#' @param Verbose A boolean indicating whether progression messages should be printed or not. (\code{FALSE} by default)
+#' @param NA.rmv  A boolean indicating if the \code{NA} should be removed or not (\code{TRUE} by default)
+#' @return A list with the following elements:
+#'\tabular{ll}{
+#' \code{Data} \tab A tibble containing all the columns of interest of all the files from FileNames.\cr
+#' \code{RemovedMarkers} \tab Same kind of tibble, but containing the markers that have been removed 
+#' due to unclear allele coding, maf filtering or duplicates dropping.
+#' }
+#' 
+
+
 #' @examples
 #' require(dplyr)
 #' require(tibble)

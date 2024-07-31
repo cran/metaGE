@@ -141,11 +141,11 @@ GetH0Items <- function(Zmat, Threshold=0.8, plotting=FALSE,Cores=NULL){
 
 #' Infer inter-environment correlation matrix
 #'
-#' @description This function infer the inter-environment correlation matrix from the z-scores after filtering markers with high probability of being under H1..
-#' @param Data A dataset containing the effects and pvalues of each marker (in rows) in each environment (in columns) as obtained by metaGE.collect
-#' @param Threshold Threshold on posteriors (to be H1) to filter markers before computing correlation (0.6 by default)
-#' @param NA.omit A boolean: should the NA be removed for the inter-environment correlation matrix computation (default=TRUE)
-#' @param Cores The number of cores to used, optional. By default, availableCores()-1 cores is used.
+#' @description This function infer the inter-environment correlation matrix from the z-scores after filtering markers with high probability of being under H1.
+#' @param Data A dataset containing the effects and pvalues of each marker (in rows) in each environment (in columns) as obtained by [metaGE.collect()].
+#' @param Threshold Threshold on posteriors (to be H1) to filter markers before computing correlation (\code{0.6} by default).
+#' @param NA.omit A boolean: should the NA be removed for the inter-environment correlation matrix computation (\code{TRUE} by default).
+#' @param Cores The number of cores to used, optional. By default, \code{availableCores()-1} cores is used.
 #' @return  The inter-environment correlation matrix
 #' @import dplyr tidyr corrplot
 #' @importFrom stats qnorm cor

@@ -72,14 +72,14 @@ metaGE.pvalplot <- function(Pvalues, Main=''){
 #' Draw the heatmap to see markers effects across environments.
 #'
 #' The function metaGE.heatmap displays the heatmap of the zscores, the estimated marker effects or the pvalues of each markers (in rows) in each environments (in columns).
-#' @param Data A dataset containing the zscores, the effects or the pvalues of each marker (in rows) in each environment (in columns), as obtained from metaGE.fit.
-#' @param Prefix The prefix of the score to display in the heatmap: 'Z.' for the zscores, 'EFFECT.' for the effects and 'PVAL.' for the pvalues.('Z.' by default)
+#' @param Data A dataset containing the zscores, the effects or the pvalues of each marker (in rows) in each environment (in columns), as obtained from [metaGE.fit()].
+#' @param Prefix The prefix of the score to display in the heatmap: "\code{Z.}" for the zscores, "\code{EFFECT.}" for the effects and "\code{PVAL.}" for the pvalues.("\code{Z.}" by default)
 #' @param EnvGroups A dataset containing the names of the environments (in the first column) and the groups to which the environments belong (in the second column). (optional)
 #' @param QTLsVarName The name of the column indicating to which QTL the marker belongs.  (optional)
-#' @param RowOrder A boolean specifying whether to reorder the markers or not. (TRUE by default)
-#' @param ColOrder A boolean specifying whether to reorder the environments or not. (TRUE by default)
-#' @param ShowDendrogram A boolean specifying wether to show the clustering of the rows and/or the columns. (FALSE by default)
-#' @param Colors A vector of three colors corresponding to the color scale of the Heatmap.
+#' @param RowOrder A boolean specifying whether to reorder the markers or not. (\code{TRUE} by default)
+#' @param ColOrder A boolean specifying whether to reorder the environments or not. (\code{TRUE} by default)
+#' @param ShowDendrogram A boolean specifying whether to show the clustering of the rows and/or the columns. (\code{FALSE} by default)
+#' @param Colors A vector of three colors corresponding to the color scale of the Heatmap.(optional)
 #' @param Main The main to display.(optional)
 #' @return The heatmap
 #' @export
@@ -219,17 +219,17 @@ metaGE.heatmap <- function(Data, Prefix='Z.', EnvGroups=NULL, QTLsVarName=NULL,R
 #' Draw the Manhattan plot.
 #'
 #' The function metaGE.manhattan displays the Manhattan plot of the -log10(p-value) or the local score of each marker along the genome.
-#' @param Data A dataset containing the columns: CHR, POS, MARKER and the variable to plot for each marker, as obtained from metaGE.fit.
+#' @param Data A dataset containing the columns: CHR, POS, MARKER and the variable to plot for each marker, as obtained from [metaGE.fit()].
 #' @param VarName The name of the column containing the variable to plot, generally the p-value or a score.
 #' @param Threshold A threshold in order to draw a "genome-wide significant" line.  (optional)
-#' @param SigZones A dataset containing the significant zones to plot, as obtained from metaGE.lscore. Must have columns: CHR, POS, START, END. (optional)
-#' @param Score A boolean. If FALSE, the -log10 of the variable is plotted, useful for plotting p-values. If TRUE, the raw values of the variable is plotted, useful for plotting scores. (FALSE by default)
-#' @param AnnotateMarker A list of markers name to annotate in the plot. (optional)
+#' @param SigZones A dataset containing the significant zones to plot, as obtained from [metaGE.lscore()]. Must have columns: CHR, Start, End. (optional)
+#' @param Score A boolean. If \code{FALSE}, the -log10 of the variable is plotted, useful for plotting p-values. If \code{TRUE}, the raw values of the variable is plotted, useful for plotting scores. (\code{FALSE} by default)
+#' @param AnnotateMarkers A list of markers name to annotate in the plot. (optional)
 #' @param Main The main to display. (optional)
-#' @param col A character vector indicating which colors to alternate for different chromosomes.(c('grey', 'black') by default)
-#' @param colSigZones A character indicating which color to plot the significant zones.('blue' by default)
+#' @param col A character vector indicating which colors to alternate for different chromosomes. (optional)
+#' @param colSigZones A character indicating which color to plot the significant zones.("\code{blue}" by default)
 #' @param Ylim Two numeric values, specifying the lower limit and the upper limit of the  y-axe scale. (optional)
-#' @return The Manhattan plot
+#' @return The Manhattan plot.
 #' @export
 #' @importFrom qqman manhattan
 #' @importFrom ggrepel geom_label_repel
@@ -269,7 +269,7 @@ metaGE.heatmap <- function(Data, Prefix='Z.', EnvGroups=NULL, QTLsVarName=NULL,R
 #'
 
 
-metaGE.manhattan <- function(Data, VarName, Threshold=NULL,SigZones=NULL,Score = FALSE, AnnotateMarker=NULL, Main='', col=c("grey", "black"), colSigZones='blue', Ylim=NULL){
+metaGE.manhattan <- function(Data, VarName, Threshold=NULL,SigZones=NULL,Score = FALSE, AnnotateMarkers=NULL, Main='', col=c("grey", "black"), colSigZones='blue', Ylim=NULL){
 
   ### Calculate cumulative position for all markers
   don <- Data %>%
@@ -290,17 +290,16 @@ metaGE.manhattan <- function(Data, VarName, Threshold=NULL,SigZones=NULL,Score =
     arrange(.data$CHR, .data$POS) %>%
     mutate( POScum=.data$POS+.data$tot - .data$chr_min + 1)
 
-  ### Annotate some markers
-  don <- don %>% mutate(is_annotate="no")
-  if(!is.null(AnnotateMarker)){
-    don[which(don$MARKER %in% AnnotateMarker),]$is_annotate <- "yes"
+ 
+  nbCHR <- length(unique(Data$CHR))
+  
+
+  if(!is.null(AnnotateMarkers)){
+    AnnotateMarker_info <- don %>% filter(.data$MARKER %in% AnnotateMarkers) %>% select(.data$MARKER, .data$POScum)
   }
 
-
-  nbCHR <- length(unique(Data$CHR))
-
   if(!is.null(SigZones)){
-    ### Calculate cumulative position for significative zones
+    ### Calculate cumulative position for significant zones
     sigzones <- Data %>%
 
       # Compute chromosome size
@@ -313,20 +312,20 @@ metaGE.manhattan <- function(Data, VarName, Threshold=NULL,SigZones=NULL,Score =
       select(-.data$chr_len) %>%
 
       # Add this info to the initial dataset
-      left_join(SigZones, ., by=c("Chr"="CHR")) %>%
+      left_join(SigZones, ., by="CHR") %>%
 
       # Add a cumulative position of each SNP
-      arrange(.data$Chr, .data$Start) %>%
+      arrange(.data$CHR, .data$Start) %>%
       mutate( Startcum=.data$Start+.data$tot - .data$chr_min + 1,
               Endcum=.data$End+.data$tot- .data$chr_min +1)
   }
 
 
   ### Compute the legend of the x axis
-  axisdf = don %>% group_by(.data$CHR) %>% summarize(center=(max(.data$POScum) + min(.data$POScum)) / 2 )
+  axisdf <- don %>% group_by(.data$CHR) %>% summarize(center=(max(.data$POScum) + min(.data$POScum)) / 2 )
 
   ### Rename the variable to plot
-  don <- don %>% select(.data$CHR,.data$POS, .data$is_annotate, .data$POScum, all_of(VarName)) %>% rename("VarToPlot"=all_of(VarName))
+  don <- don %>% select(.data$CHR,.data$POS, .data$POScum, all_of(VarName)) %>% rename("VarToPlot"=all_of(VarName))
 
   if(!Score){
     ### Built the plot
@@ -349,18 +348,38 @@ metaGE.manhattan <- function(Data, VarName, Threshold=NULL,SigZones=NULL,Score =
         panel.grid.minor.x = element_blank()
       )
 
-    # Add label using ggrepel to avoid overlapping
-    if(!is.null(AnnotateMarker)){
-      manhattan <- manhattan +  ggrepel::geom_label_repel( data=subset(don, don$is_annotate=="yes"), aes(x=.data$POScum, y= -log10(min(.data$VarToPlot,Ylim[2])),label=str_sub(paste0("QTL",.data$CHR,"_",round(.data$POS / 1e6 , digits = 2)),end=-2)),fontface = 'bold', size=12)
+    # Add vertical lines to annotate markers
+    if(!is.null(AnnotateMarkers)){
+      manhattan <- manhattan + geom_segment(data = AnnotateMarker_info,aes(x = .data$POScum, xend=.data$POScum,y=0.05, yend=Inf),
+                                            linewidth=0.8,color= yarrr::transparent("red2", trans.val = .3),linetype=2) 
     }
     # Add a threshold
     if(!is.null(Threshold)){
-      manhattan <- manhattan + geom_hline(yintercept=-log10(Threshold), color = "red",size=1.5)
+      manhattan <- manhattan + geom_hline(yintercept=-log10(Threshold), color = "red2",linewidth=1.5)
     }
     # Add limit to the y axes
     if(is.null(Ylim)){
       Ylim <- c(min(-log10(don$VarToPlot)), max(-log10(don$VarToPlot)))
     }
+    # Add the sigzones
+    if(!is.null(SigZones)){
+      # Compute chromosome size
+      width_box <- Data %>% group_by(.data$CHR) %>%
+        summarise(chr_len=max(.data$POS)-min(.data$POS)) %>%
+        pull(.data$chr_len) %>% mean() * 0.01
+      
+      
+      for (i in 1:nrow(sigzones)){
+        manhattan <- manhattan + geom_rect(data=data.frame(xmin=max(sigzones$Startcum[i]-width_box,0),
+                                                           xmax=min(sigzones$Endcum[i]+width_box,max(don %>% filter(.data$CHR==sigzones$CHR[i]) %>% pull(.data$POScum))),
+                                                           ymin=max(0,Ylim[1]),
+                                                           ymax=min(-log10(sigzones$PvalMin[i]),Ylim[2])),
+                                           aes(xmin=.data$xmin,xmax=.data$xmax,ymin=.data$ymin,ymax=.data$ymax),
+                                           fill=colSigZones,alpha=0.3)
+      }
+    }
+    
+    
   }else{
     ### Built the plot
     manhattan <- ggplot() +
@@ -381,13 +400,14 @@ metaGE.manhattan <- function(Data, VarName, Threshold=NULL,SigZones=NULL,Score =
         panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank()
       )
-    # Add label using ggrepel to avoid overlapping
-    if(!is.null(AnnotateMarker)){
-      manhattan <- manhattan +  ggrepel::geom_label_repel( data=subset(don, don$is_annotate=="yes"), aes(x=.data$POScum, y=min(.data$VarToPlot,Ylim[2]),label=str_sub(paste0("QTL",.data$CHR,"_",round(.data$POS / 1e6 , digits = 2)),end=-2)),fontface = 'bold', size=12)
+    # Add vertical lines to annotate markers
+    if(!is.null(AnnotateMarkers)){
+      manhattan <- manhattan + geom_segment(data = AnnotateMarker_info,aes(x = .data$POScum, xend=.data$POScum,y=0.05, yend=Inf),
+                                            linewidth=0.8,color= yarrr::transparent("red2", trans.val = .3),linetype=2) 
     }
     # Add a threshold
     if(!is.null(Threshold)){
-      manhattan <- manhattan + geom_hline(yintercept=Threshold, color = "red",size=1.5)
+      manhattan <- manhattan + geom_hline(yintercept=Threshold, color = "red2",linewidth=1.5)
     }
     # Add limit to the y axes
     if(is.null(Ylim)){
@@ -397,15 +417,15 @@ metaGE.manhattan <- function(Data, VarName, Threshold=NULL,SigZones=NULL,Score =
       # Compute chromosome size
       width_box <- Data %>% group_by(.data$CHR) %>%
         summarise(chr_len=max(.data$POS)-min(.data$POS)) %>%
-        pull(.data$chr_len) %>% mean() * 0.05
+        pull(.data$chr_len) %>% mean() * 0.01
 
       for (i in 1:nrow(sigzones)){
-        manhattan <- manhattan + geom_rect(data=data.frame(xmin=max(sigzones$Endcum[i]-width_box,0),
-                                                           xmax=min(sigzones$Endcum[i]+width_box,max(don$POScum)),
+        manhattan <- manhattan + geom_rect(data=data.frame(xmin=max(sigzones$Startcum[i]-width_box,0),
+                                                           xmax=min(sigzones$Endcum[i]+width_box,max(don %>% filter(.data$CHR==sigzones$CHR[i]) %>% pull(.data$POScum))),
                                                            ymin=max(0,Ylim[1]),
                                                            ymax=min(sigzones$LocalScoreMax[i],Ylim[2])),
                                            aes(xmin=.data$xmin,xmax=.data$xmax,ymin=.data$ymin,ymax=.data$ymax),
-                                           fill=colSigZones,alpha=0.2)
+                                           fill=colSigZones,alpha=0.3)
       }
     }
   }
@@ -428,13 +448,13 @@ metaGE.manhattan <- function(Data, VarName, Threshold=NULL,SigZones=NULL,Score =
 #' Plot the z-score of a marker according to a covariate.
 #'
 #' The function metaGE.regplot displays the graph of the z-scores of a marker according to a covariate.
-#' @param Data A dataset containing the columns: MARKER and the z-scores of each marker (in rows) in each environment (in columns), as obtained from metaGE.collect.
+#' @param Data A dataset containing the columns: MARKER and the z-scores or the effects of each marker (in rows) in each environment (in columns), as obtained from [metaGE.collect()].
 #' @param Covariate  A dataset containing the values of one or more covariates (in columns) in each environment (in rows).
-#' @param EnvName The name of the column containing the names of the environment in the Covariate dataset.
+#' @param EnvName The name of the column containing the names of the environment in the \code{Covariate} dataset.
 #' @param MarkerName The name of the marker.
 #' @param VarName The name of the column containing the covariable to plot.
-#' @param Zscore A boolean. If FALSE, the estimated marker effects is plotted. If TRUE, the z-scores of the marker is plotted. (FALSE by default)
-#' @param aesCol The name of the column containing a qualitative covariable to specify the color of the points. (optional)
+#' @param Zscore A boolean. If \code{FALSE}, the estimated marker effects is plotted. If \code{TRUE}, the z-scores of the marker is plotted. (\code{FALSE} by default)
+#' @param aesCol The name of the column in the \code{Covariate} dataset containing a qualitative covariable to specify the color of the points. (optional)
 #' @param Main The main to display.(optional)
 #' @return The plot
 #' @export

@@ -26,16 +26,16 @@ LLikelihoodT_vect <- function(Zmat, Delta, P,Mu, Tau){
 #' Meta-analysis procedure: Fixed or Random effect.
 #'
 #' Quantitative trait loci detection via Fixed or Random effect meta-analysis GWAS procedure.
-#' @param Data A dataset containing the estimated marker effect and its associated pvalue of each marker (in rows) in each environment (in columns), as obtained from metaGE.collect.
-#' @param MatCorr The inter-environments correlation matrix. Can be computed using metaGE.cor.
-#' @param Method A string specifying the method to be performed: either 'Fe' or 'Re'.
-#' @param NA.omit A boolean specifying whether the markers with some NA values should be removed. (TRUE by default)
-#' @param DropZScores A boolean specifying whether the Zscores should be dropped from the dataset or not.(FALSE by default)
-#' @return  The dataset Data with supplementary  columns:
-#' * Mu: Estimation of Mu,
-#' * Tau: Estimation of Tau, the heterogeneity,
-#' * Pvalue: The Pvalue of the test,
-#' * the Zscores for each environment if DropLocalScores = FALSE.
+#' @param Data A dataset containing the estimated marker effect and its associated pvalue of each marker (in rows) in each environment (in columns), as obtained from [metaGE.collect()].
+#' @param MatCorr The inter-environments correlation matrix. Can be computed using [metaGE.cor()].
+#' @param Method A string specifying the method to be performed: either "\code{Fe}" or "\code{Re}".
+#' @param NA.omit A boolean specifying whether the markers with some \code{NA} values should be removed. (\code{TRUE} by default)
+#' @param DropZScores A boolean specifying whether the Zscores should be dropped from the dataset or not.(\code{FALSE} by default)
+#' @return  The dataset Data with supplementary columns:
+#' * PVALUE: The pvalue of the MA test,
+#' * Mu: Estimate of the mean marker effect,
+#' * Tau: Estimate of the variance of the marker effect, for the Random model only,
+#' * the Zscores for each environment if \code{DropZScores = FALSE}.
 #' @details Different tests may be performed:
 #' * Fixed Effect (Fe), to identify markers with a stable effect across environments.
 #' * Random Effect (Re), to identify markers whose effects may be unstable across environments.

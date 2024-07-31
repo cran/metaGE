@@ -17,15 +17,15 @@ ContrastStatTest.NA(
 \arguments{
 \item{Incidence}{A matrix of incidence, as obtained from metaGE.incidence.}
 
-\item{Contrast}{A matrix of contrast, if NULL the identity matrix is used. (NULL by default)}
+\item{Contrast}{A matrix of contrast, if NULL the identity matrix is used. (\code{NULL} by default)}
 
 \item{Zmat}{A matrix containing the Zscores of all markers (in rows) in each environment (in columns).}
 
-\item{MatCorr}{The inter-environments correlation matrix. Can be computed using MetaGE.cor.}
+\item{MatCorr}{The inter-environments correlation matrix. Can be computed using \code{\link[=metaGE.cor]{metaGE.cor()}}.}
 
 \item{Data}{A dataset containing the effect, the pvalues and the na configuration for all marker}
 
-\item{Configs.list}{A vector containing the NA configurations present in the dataset}
+\item{Configs.list}{A vector containing the \code{NA} configurations present in the dataset}
 
 \item{IncidenceName}{The name of the incidence.}
 }

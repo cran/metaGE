@@ -16,31 +16,31 @@ metaGE.test(
 )
 }
 \arguments{
-\item{Data}{A dataset containing the estimated marker effect and its associated pvalue of each marker (in rows) in each environment (in columns), as obtained from metaGE.collect.}
+\item{Data}{A dataset containing the estimated marker effect and its associated pvalue of each marker (in rows) in each environment (in columns), as obtained from \code{\link[=metaGE.collect]{metaGE.collect()}}.}
 
-\item{MatCorr}{The inter-environment correlation matrix. It can be compute by the metaGE.cor function.}
+\item{MatCorr}{The inter-environment correlation matrix. It can be compute by the \code{\link[=metaGE.cor]{metaGE.cor()}} function.}
 
-\item{Incidence}{A matrix of incidence, as obtained from metaGE.incidence or a list of such matrix.}
+\item{Incidence}{A matrix of incidence, as obtained from \code{\link[=metaGE.incidence]{metaGE.incidence()}} or a list of such matrix.}
 
 \item{Contrast}{A matrix of contrast, or a list of such matrix.}
 
 \item{Covariate}{A dataset containing the values of one or more covariates (in columns) in each environment (in rows).}
 
-\item{EnvName}{The name of the column containing the names of the environment in the covariate dataset.}
+\item{EnvName}{The name of the column containing the names of the environment in the \code{Covariate} dataset.}
 
-\item{NA.omit}{A boolean specifying whether the markers with some NA values should be removed from the test procedure. (TRUE by default)}
+\item{NA.omit}{A boolean specifying whether the markers with some \code{NA} values should be removed from the test procedure. (\code{TRUE} by default)}
 
-\item{DropZScores}{A boolean specifying whether the Zscores should be dropped from the dataset or not. (FALSE by default)}
+\item{DropZScores}{A boolean specifying whether the Zscores should be dropped from the dataset or not. (\code{FALSE} by default)}
 }
 \value{
-The dataset Data with supplementary columns containing the Pvalue of each test performed.
+The dataset \code{Data} with supplementary columns containing the PVALUE of each test performed.
 }
 \description{
 The function metaGE.test compute meta-analysis contrast or regression test.
 }
 \details{
-If Incidence is provided, the function will perform all the corresponding tests of contrast. If Covariate is provided, the function will perform all the corresponding meta-regression tests.
-The Contrast can be NULL, in this case the identity matrix is used.
+If \code{Incidence} is provided, the function will perform all the corresponding tests of contrast. If \code{Covariate} is provided, the function will perform all the corresponding meta-regression tests.
+The \code{Contrast} can be \code{NULL}, in this case the identity matrix is used.
 }
 \examples{
 require(dplyr)

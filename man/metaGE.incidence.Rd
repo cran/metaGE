@@ -13,9 +13,9 @@ metaGE.incidence(VarName, Covariate, EnvName, Data, AtLeast = 1)
 
 \item{EnvName}{The name of the column containing the names of the environment in the Covariate dataset.}
 
-\item{Data}{A dataset containing the effects and pvalues of each marker (in rows) in each environment (in columns), as obtained from metaGE.collect.}
+\item{Data}{A dataset containing the effects and pvalues of each marker (in rows) in each environment (in columns), as obtained from \code{\link[=metaGE.collect]{metaGE.collect()}}.}
 
-\item{AtLeast}{A numeric value indicating the minimum number of environments must belong to each level (equals 1 by default).}
+\item{AtLeast}{A numeric value indicating the minimum number of environments must belong to each level (equals \code{1} by default).}
 }
 \value{
 A  binary matrix containing indicator variables with in rows the levels of the variables and in columns the environment.

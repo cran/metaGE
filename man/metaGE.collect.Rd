@@ -16,26 +16,23 @@ metaGE.collect(
 \arguments{
 \item{FileNames}{A list containing the file paths to merge (one trait only) or a list of such lists}
 
-\item{VariableNames}{A named list containing the column names in the original files corresponding to the variables below:
-\itemize{
-\item MARKER, CHR, POS, EFFECT, EFFECT_SE, PVAL,
-\item (optional: FREQ, ALLELE0, ALLELE1, WEIGHT)
-or a list of such lists.
-}}
+\item{VariableNames}{A named list containing the column names in the original files corresponding
+to the variables : MARKER, CHR, POS, EFFECT, PVAL (optional: FREQ, ALLELE0, ALLELE1) ; or a list of such lists.}
 
 \item{MinFreq}{A numeric value allowing to filter markers based on the maf. (optional)}
 
-\item{DropDuplicates}{A boolean indicating whether duplicate markers should be removed or not. (TRUE by default)}
+\item{DropDuplicates}{A boolean indicating whether duplicate markers should be removed or not. (\code{TRUE} by default)}
 
-\item{Verbose}{A boolean indicating whether progression messages should be printed or not. (FALSE by default)}
+\item{Verbose}{A boolean indicating whether progression messages should be printed or not. (\code{FALSE} by default)}
 
-\item{NA.rmv}{A boolean should the NA be removed or not (TRUE by default)}
+\item{NA.rmv}{A boolean indicating if the \code{NA} should be removed or not (\code{TRUE} by default)}
 }
 \value{
-A list of:
-\itemize{
-\item Data ->  a tibble containing all the columns of interest of all the files from FileNames,
-\item RemovedMarkers -> same kind of tibble, but containing the markers that have been removed due to unclear allele coding.
+A list with the following elements:
+\tabular{ll}{
+\code{Data} \tab A tibble containing all the columns of interest of all the files from FileNames.\cr
+\code{RemovedMarkers} \tab Same kind of tibble, but containing the markers that have been removed
+due to unclear allele coding, maf filtering or duplicates dropping.
 }
 }
 \description{
@@ -44,17 +41,18 @@ This function merges files containing the summary statistics of GWAS in differen
 \details{
 Each file MUST contain the variables below:
 \itemize{
-\item MARKER =  marker,
-\item CHR = the chromosome ,
-\item POS = the position of the marker on the chromosome,
-\item EFFECT = the mean effect of the marker,
-\item EFFECT_SE = the standard error of the mean effect,
-\item PVAL = the pvalue of the mean effect.
+\item MARKER: the marker name
+\item CHR: the chromosome
+\item POS: the position of the marker
+\item EFFECT: the mean effect of the marker
+\item PVAL: the pvalue
+}
+
 Each file might contain the variables:
-\item FREQ = MAF
-\item ALLELE0
-\item ALLELE1
-\item WEIGHT
+\itemize{
+\item FREQ: MAF
+\item ALLELE0: Allele coding for allele 0
+\item ALLELE1: Allele coding for allele 1
 }
 }
 \examples{

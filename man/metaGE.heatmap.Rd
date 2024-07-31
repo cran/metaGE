@@ -17,21 +17,21 @@ metaGE.heatmap(
 )
 }
 \arguments{
-\item{Data}{A dataset containing the zscores, the effects or the pvalues of each marker (in rows) in each environment (in columns), as obtained from metaGE.fit.}
+\item{Data}{A dataset containing the zscores, the effects or the pvalues of each marker (in rows) in each environment (in columns), as obtained from \code{\link[=metaGE.fit]{metaGE.fit()}}.}
 
-\item{Prefix}{The prefix of the score to display in the heatmap: 'Z.' for the zscores, 'EFFECT.' for the effects and 'PVAL.' for the pvalues.('Z.' by default)}
+\item{Prefix}{The prefix of the score to display in the heatmap: "\code{Z.}" for the zscores, "\code{EFFECT.}" for the effects and "\code{PVAL.}" for the pvalues.("\code{Z.}" by default)}
 
 \item{EnvGroups}{A dataset containing the names of the environments (in the first column) and the groups to which the environments belong (in the second column). (optional)}
 
 \item{QTLsVarName}{The name of the column indicating to which QTL the marker belongs.  (optional)}
 
-\item{RowOrder}{A boolean specifying whether to reorder the markers or not. (TRUE by default)}
+\item{RowOrder}{A boolean specifying whether to reorder the markers or not. (\code{TRUE} by default)}
 
-\item{ColOrder}{A boolean specifying whether to reorder the environments or not. (TRUE by default)}
+\item{ColOrder}{A boolean specifying whether to reorder the environments or not. (\code{TRUE} by default)}
 
-\item{ShowDendrogram}{A boolean specifying wether to show the clustering of the rows and/or the columns. (FALSE by default)}
+\item{ShowDendrogram}{A boolean specifying whether to show the clustering of the rows and/or the columns. (\code{FALSE} by default)}
 
-\item{Colors}{A vector of three colors corresponding to the color scale of the Heatmap.}
+\item{Colors}{A vector of three colors corresponding to the color scale of the Heatmap.(optional)}
 
 \item{Main}{The main to display.(optional)}
 }

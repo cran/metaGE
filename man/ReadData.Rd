@@ -11,7 +11,7 @@ ReadData(ListN, FileN, VarN, MinFreq = 0)
 
 \item{FileN}{The name of the file to read}
 
-\item{VarN}{A named list containing the column names in the file corresponding to the variables below: MARKER, CHR, POS, EFFECT, EFFECT_SE, PVAL,(optional: FREQ, ALLELE0, ALLELE1, wEIGHT)}
+\item{VarN}{A named list containing the column names in the file corresponding to the variables below: MARKER, CHR, POS, EFFECT, PVAL. (optional: FREQ, ALLELE0, ALLELE1)}
 
 \item{MinFreq}{A numeric value allowing to filter to keep markers with MAF > MinFreq}
 }

@@ -11,8 +11,8 @@ if (getRversion() >= "2.15.1")
 #' @param VarName The name of the column containing the categorical variable in the Covariate dataset.
 #' @param Covariate A dataset containing categorical variables (in columns) describing the environments (in rows).
 #' @param EnvName The name of the column containing the names of the environment in the Covariate dataset.
-#' @param Data A dataset containing the effects and pvalues of each marker (in rows) in each environment (in columns), as obtained from metaGE.collect.
-#' @param AtLeast A numeric value indicating the minimum number of environments must belong to each level (equals 1 by default).
+#' @param Data A dataset containing the effects and pvalues of each marker (in rows) in each environment (in columns), as obtained from [metaGE.collect()].
+#' @param AtLeast A numeric value indicating the minimum number of environments must belong to each level (equals \code{1} by default).
 #' @return  A  binary matrix containing indicator variables with in rows the levels of the variables and in columns the environment.
 #' @details The names of the environment must be the same as used in the Data dataset.
 #' @export
@@ -127,7 +127,7 @@ CheckContrast <- function(Contrast, ContrastName) {
 #' Check and reformat the matrix of incidence
 #'
 #' The function CheckIncidence check and reformat the matrix of incidence.
-#' @param Incidence A matrix of incidence, as obtained from metaGE.incidence.
+#' @param Incidence A matrix of incidence, as obtained from [metaGE.incidence()].
 #' @param IncidenceName The name of the incidence.
 #' @return  The matrix of incidence in the right format.
 
@@ -173,10 +173,10 @@ CheckIncidence <- function(Incidence, IncidenceName) {
 #' Compute the statistic of the contrast test.
 #'
 #' The function ContrastStatTest compute the statistic of the contrast test.
-#' @param Incidence A matrix of incidence, as obtained from metaGE.incidence.
-#' @param Contrast A matrix of contrast, if NULL the identity matrix is used. (NULL by default)
+#' @param Incidence A matrix of incidence, as obtained from [metaGE.incidence()].
+#' @param Contrast A matrix of contrast, if \code{NULL} the identity matrix is used. (\code{NULL} by default)
 #' @param Zmat A matrix containing the Zscores of all markers (in rows) in each environment (in columns).
-#' @param MatCorr The inter-environments correlation matrix. Can be computed using MetaGE.cor.
+#' @param MatCorr The inter-environments correlation matrix. Can be computed using [metaGE.cor()].
 #' @param IncidenceName The name of the incidence.
 #' @return  A dataset of two columns containing the pvalue of the test of contrast and the minimum number of environment per group of all markers.
 #' @importFrom stats setNames
@@ -242,11 +242,11 @@ ContrastStatTest <-
 #'
 #' The function ContrastStatTest compute the statistic of the contrast test.
 #' @param Incidence A matrix of incidence, as obtained from metaGE.incidence.
-#' @param Contrast A matrix of contrast, if NULL the identity matrix is used. (NULL by default)
+#' @param Contrast A matrix of contrast, if NULL the identity matrix is used. (\code{NULL} by default)
 #' @param Zmat A matrix containing the Zscores of all markers (in rows) in each environment (in columns).
-#' @param MatCorr The inter-environments correlation matrix. Can be computed using MetaGE.cor.
+#' @param MatCorr The inter-environments correlation matrix. Can be computed using [metaGE.cor()].
 #' @param Data A dataset containing the effect, the pvalues and the na configuration for all marker
-#' @param Configs.list A vector containing the NA configurations present in the dataset
+#' @param Configs.list A vector containing the \code{NA} configurations present in the dataset
 #' @param IncidenceName The name of the incidence.
 #' @return  A dataset of two columns containing the pvalue of the test of contrast and the minimum number of environment per group of all markers.
 #' @importFrom stats setNames
@@ -400,7 +400,7 @@ ContrastStatTest.NA <-
 #' @param Covariate A dataset containing the values of one Covariate (in columns) in each environment (in rows).
 #' @param CovName The name the Covariate.
 #' @param Zmat A matrix containing the Zscores of all markers (in rows) in each environment (in columns).
-#' @param MatCorr The inter-environments correlation matrix. Can be computed using MetaGE.cor.
+#' @param MatCorr The inter-environments correlation matrix. Can be computed using [metaGE.cor()].
 #' @return A dataset of two columns containing the pvalue of the meta-regression test and the number of environment used to perform the test of all markers.
 #' @importFrom stats pnorm
 
@@ -441,8 +441,8 @@ RegressionStatTest <- function(Covariate, CovName, Zmat, MatCorr) {
 #' @param Covariate A dataset containing the values of one covariate (in columns) in each environment (in rows).
 #' @param CovName The name the covariate.
 #' @param Zmat A matrix containing the Zscores of all markers (in rows) in each environment (in columns).
-#' @param MatCorr The inter-environments correlation matrix. Can be computed using MetaGE.cor.
-#' @param Data A dataset containing the effect, the pvalues and the na configuration for all marker
+#' @param MatCorr The inter-environments correlation matrix. Can be computed using [metaGE.cor()].
+#' @param Data A dataset containing the effect, the pvalues and the \code{NA} configuration for all marker
 #' @param Configs.list A vector containing the NA configurations present in the dataset
 #' @return A dataset of two columns containing the pvalue of the meta-regression test and the number of environment used to perform the test of all markers.
 #' @importFrom stats pnorm
@@ -515,17 +515,17 @@ RegressionStatTestNA <-
 #' Meta-analysis test for Genotype x Environment interactions: Contrast or Regression.
 #'
 #' The function metaGE.test compute meta-analysis contrast or regression test.
-#' @param Data A dataset containing the estimated marker effect and its associated pvalue of each marker (in rows) in each environment (in columns), as obtained from metaGE.collect.
-#' @param MatCorr The inter-environment correlation matrix. It can be compute by the metaGE.cor function.
-#' @param Incidence A matrix of incidence, as obtained from metaGE.incidence or a list of such matrix.
+#' @param Data A dataset containing the estimated marker effect and its associated pvalue of each marker (in rows) in each environment (in columns), as obtained from [metaGE.collect()].
+#' @param MatCorr The inter-environment correlation matrix. It can be compute by the [metaGE.cor()] function.
+#' @param Incidence A matrix of incidence, as obtained from [metaGE.incidence()] or a list of such matrix.
 #' @param Contrast A matrix of contrast, or a list of such matrix.
 #' @param Covariate  A dataset containing the values of one or more covariates (in columns) in each environment (in rows).
-#' @param EnvName The name of the column containing the names of the environment in the covariate dataset.
-#' @param NA.omit A boolean specifying whether the markers with some NA values should be removed from the test procedure. (TRUE by default)
-#' @param DropZScores A boolean specifying whether the Zscores should be dropped from the dataset or not. (FALSE by default)
-#' @details If Incidence is provided, the function will perform all the corresponding tests of contrast. If Covariate is provided, the function will perform all the corresponding meta-regression tests.
-#' The Contrast can be NULL, in this case the identity matrix is used.
-#' @return The dataset Data with supplementary columns containing the Pvalue of each test performed.
+#' @param EnvName The name of the column containing the names of the environment in the \code{Covariate} dataset.
+#' @param NA.omit A boolean specifying whether the markers with some \code{NA} values should be removed from the test procedure. (\code{TRUE} by default)
+#' @param DropZScores A boolean specifying whether the Zscores should be dropped from the dataset or not. (\code{FALSE} by default)
+#' @details If \code{Incidence} is provided, the function will perform all the corresponding tests of contrast. If \code{Covariate} is provided, the function will perform all the corresponding meta-regression tests.
+#' The \code{Contrast} can be \code{NULL}, in this case the identity matrix is used.
+#' @return The dataset \code{Data} with supplementary columns containing the PVALUE of each test performed.
 #' @import dplyr stringr
 #' @importFrom stats pnorm qnorm
 #' @importFrom data.table setnames

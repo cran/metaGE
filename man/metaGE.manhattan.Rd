@@ -10,7 +10,7 @@ metaGE.manhattan(
   Threshold = NULL,
   SigZones = NULL,
   Score = FALSE,
-  AnnotateMarker = NULL,
+  AnnotateMarkers = NULL,
   Main = "",
   col = c("grey", "black"),
   colSigZones = "blue",
@@ -18,28 +18,28 @@ metaGE.manhattan(
 )
 }
 \arguments{
-\item{Data}{A dataset containing the columns: CHR, POS, MARKER and the variable to plot for each marker, as obtained from metaGE.fit.}
+\item{Data}{A dataset containing the columns: CHR, POS, MARKER and the variable to plot for each marker, as obtained from \code{\link[=metaGE.fit]{metaGE.fit()}}.}
 
 \item{VarName}{The name of the column containing the variable to plot, generally the p-value or a score.}
 
 \item{Threshold}{A threshold in order to draw a "genome-wide significant" line.  (optional)}
 
-\item{SigZones}{A dataset containing the significant zones to plot, as obtained from metaGE.lscore. Must have columns: CHR, POS, START, END. (optional)}
+\item{SigZones}{A dataset containing the significant zones to plot, as obtained from \code{\link[=metaGE.lscore]{metaGE.lscore()}}. Must have columns: CHR, Start, End. (optional)}
 
-\item{Score}{A boolean. If FALSE, the -log10 of the variable is plotted, useful for plotting p-values. If TRUE, the raw values of the variable is plotted, useful for plotting scores. (FALSE by default)}
+\item{Score}{A boolean. If \code{FALSE}, the -log10 of the variable is plotted, useful for plotting p-values. If \code{TRUE}, the raw values of the variable is plotted, useful for plotting scores. (\code{FALSE} by default)}
 
-\item{AnnotateMarker}{A list of markers name to annotate in the plot. (optional)}
+\item{AnnotateMarkers}{A list of markers name to annotate in the plot. (optional)}
 
 \item{Main}{The main to display. (optional)}
 
-\item{col}{A character vector indicating which colors to alternate for different chromosomes.(c('grey', 'black') by default)}
+\item{col}{A character vector indicating which colors to alternate for different chromosomes. (optional)}
 
-\item{colSigZones}{A character indicating which color to plot the significant zones.('blue' by default)}
+\item{colSigZones}{A character indicating which color to plot the significant zones.("\code{blue}" by default)}
 
 \item{Ylim}{Two numeric values, specifying the lower limit and the upper limit of the  y-axe scale. (optional)}
 }
 \value{
-The Manhattan plot
+The Manhattan plot.
 }
 \description{
 The function metaGE.manhattan displays the Manhattan plot of the -log10(p-value) or the local score of each marker along the genome.

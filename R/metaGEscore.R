@@ -68,7 +68,7 @@ thresUnif <- function(L, cor, xi, alpha = 0.05){
 #'
 #'
 
-sig_sl=function(lind,pos, th){
+sig_sl<- function(lind,pos, th){
   zones=c(0,0,0)
   list=lind
   auxpos=pos
@@ -104,23 +104,26 @@ sig_sl=function(lind,pos, th){
 #'
 #' The function metaGE.lscore computes the local score and the significant regions from
 #' a set of pvalues.
-#' @param Data A dataset containing the following columns: CHR, POS, MARKER and PvalName.
+#' @param Data A dataset containing the following columns: CHR, POS, MARKER and \code{PvalName}.
 #' @param PvalName The name of the column containing the p-value.
-#' @param xi The threshold of the score, xi = 1,2,3 or 4.
+#' @param xi The threshold of the score, \code{xi} = 1,2,3 or 4.
 #' @details  This function is directly inherited from the scorelocalfunctions.R R code file of Fariello MI, Boitard S, Mercier S, et al.,
-#' as available on the https://forge-dga.jouy.inra.fr/projects/local-score website.
+#' as available on the <https://forge-dga.jouy.inra.fr/projects/local-score> website.
 #' The technical details of the computation can be found in Fariello MI, Boitard S, Mercier S, et al.
 #' Accounting for linkage disequilibrium in genome scans for selection without individual genotypes: The local score approach.
-#' https://doi.org/10.1111/mec.14141.
+#' \doi{10.1111/mec.14141}.
 #' The function computes a local score for the detection of significant regions based on the hypothesis that the H0 distribution of the pvalues is
 #' uniform. Under this hypothesis the local score follows a Gumbel distribution (under H0) whose parameters depend
 #' on the threshold \code{xi} and on the autocorrelation between pvalues within each chromosome. The threshold has
 #' to be selected in 1,2,3,4 and the autocorrelation is computed internally.
-#' @return A list of:
-#' * Data the dataset Data with the local score as supplementary column.
-#' * SigZones a dataset containing informations about the significative regions.
-#' * SigMarker a dataset containing the signicatives markers.
-#' * ChrThreshold a dataset containing the chromosome-wide significance thresholds.
+#' @return A list with the following elements:
+#'\tabular{ll}{
+#' \code{Data} \tab The dataset \code{Data} with the local score as supplementary column.\cr
+#' \code{SigZones} \tab A dataset containing information about the significant regions.\cr
+#' \code{SigMarker} \tab A dataset containing the significant markers. \cr
+#' \code{ChrThreshold} \tab A dataset containing the chromosome-wide significance thresholds.
+#' }
+#' 
 #' @importFrom data.table as.data.table setkey
 #' @export
 #' @examples
@@ -192,28 +195,34 @@ metaGE.lscore <- function(Data,PvalName,xi){
   })
 
   sigZones <- sigZones %>% filter(.data$peak!=0)
-
-  Cand <- lapply(1:nrow(sigZones), function(ii){
-    mydata %>% filter(.data$pos>=sigZones$beg[ii] & .data$pos<=sigZones$end[ii] & .data$chr==sigZones$chr[ii]) %>% select(.data$chr, .data$pos,.data$MARKER,.data$pval,.data$lindley)
-  })
-  DT.cand <-  map(1:length(Cand), ~mutate(Cand[[.x]],Region=.x, Peak=sigZones$peak[.x],
-                                          chr=sigZones$chr[.x])) %>% bind_rows()
-
-  Cand <- DT.cand %>%  select(-.data$Peak) %>% rename(CHR=.data$chr,POS=.data$pos,SCORE=.data$lindley,PVALUE=.data$pval,REGION=.data$Region)
-
-  DT.cand <- DT.cand %>%
-    group_by(.data$Region) %>%
-    summarise(Chr=mean(.data$chr),Start = min(.data$pos),
-              End=max(.data$pos),Size=n(),
-              PvalMin=min(.data$pval),
-              PvalMax=max(.data$pval),
-              PosPvalmin=.data$pos[which.min(.data$pval)],
-              MarkerPvalmin=.data$MARKER[which.min(.data$pval)],
-              LocalScoreMax=max(.data$lindley),
-              LocalScoreMin=min(.data$lindley),
-              PosLSmax=.data$pos[which.max(.data$lindley)],
-              MarkerLSmax=.data$MARKER[which.max(.data$lindley)]) %>%
-    as.data.frame()
+  
+  if(nrow(sigZones)>0){
+    Cand <- lapply(1:nrow(sigZones), function(ii){
+      mydata %>% filter(.data$pos>=sigZones$beg[ii] & .data$pos<=sigZones$end[ii] & .data$chr==sigZones$chr[ii]) %>% select(.data$chr, .data$pos,.data$MARKER,.data$pval,.data$lindley)
+    })
+    DT.cand <-  map(1:length(Cand), ~mutate(Cand[[.x]],Region=.x, Peak=sigZones$peak[.x],
+                                            chr=sigZones$chr[.x])) %>% bind_rows()
+    
+    Cand <- DT.cand %>%  select(-.data$Peak) %>% rename(CHR=.data$chr,POS=.data$pos,SCORE=.data$lindley,PVALUE=.data$pval,REGION=.data$Region)
+    
+    DT.cand <- DT.cand %>%
+      group_by(.data$Region) %>%
+      summarise(CHR=mean(.data$chr),Start = min(.data$pos),
+                End=max(.data$pos),Size=n(),
+                PvalMin=min(.data$pval),
+                PvalMax=max(.data$pval),
+                PosPvalMin=.data$pos[which.min(.data$pval)],
+                MarkerPvalMin=.data$MARKER[which.min(.data$pval)],
+                LocalScoreMax=max(.data$lindley),
+                LocalScoreMin=min(.data$lindley),
+                PosLSMax=.data$pos[which.max(.data$lindley)],
+                MarkerLSMax=.data$MARKER[which.max(.data$lindley)]) %>%
+      as.data.frame()
+  }else{
+    DT.cand <- NULL
+    Cand <- NULL
+  }
+ 
 
   ## Handling of NA
   if(NA.pval){

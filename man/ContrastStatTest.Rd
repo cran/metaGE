@@ -7,13 +7,13 @@
 ContrastStatTest(Incidence, Contrast = NULL, Zmat, MatCorr, IncidenceName)
 }
 \arguments{
-\item{Incidence}{A matrix of incidence, as obtained from metaGE.incidence.}
+\item{Incidence}{A matrix of incidence, as obtained from \code{\link[=metaGE.incidence]{metaGE.incidence()}}.}
 
-\item{Contrast}{A matrix of contrast, if NULL the identity matrix is used. (NULL by default)}
+\item{Contrast}{A matrix of contrast, if \code{NULL} the identity matrix is used. (\code{NULL} by default)}
 
 \item{Zmat}{A matrix containing the Zscores of all markers (in rows) in each environment (in columns).}
 
-\item{MatCorr}{The inter-environments correlation matrix. Can be computed using MetaGE.cor.}
+\item{MatCorr}{The inter-environments correlation matrix. Can be computed using \code{\link[=metaGE.cor]{metaGE.cor()}}.}
 
 \item{IncidenceName}{The name of the incidence.}
 }

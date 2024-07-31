@@ -13,9 +13,9 @@ RegressionStatTestNA(Covariate, CovName, Zmat, MatCorr, Data, Configs.list)
 
 \item{Zmat}{A matrix containing the Zscores of all markers (in rows) in each environment (in columns).}
 
-\item{MatCorr}{The inter-environments correlation matrix. Can be computed using MetaGE.cor.}
+\item{MatCorr}{The inter-environments correlation matrix. Can be computed using \code{\link[=metaGE.cor]{metaGE.cor()}}.}
 
-\item{Data}{A dataset containing the effect, the pvalues and the na configuration for all marker}
+\item{Data}{A dataset containing the effect, the pvalues and the \code{NA} configuration for all marker}
 
 \item{Configs.list}{A vector containing the NA configurations present in the dataset}
 }

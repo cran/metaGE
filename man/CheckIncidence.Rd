@@ -7,7 +7,7 @@
 CheckIncidence(Incidence, IncidenceName)
 }
 \arguments{
-\item{Incidence}{A matrix of incidence, as obtained from metaGE.incidence.}
+\item{Incidence}{A matrix of incidence, as obtained from \code{\link[=metaGE.incidence]{metaGE.incidence()}}.}
 
 \item{IncidenceName}{The name of the incidence.}
 }

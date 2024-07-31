@@ -13,7 +13,7 @@ RegressionStatTest(Covariate, CovName, Zmat, MatCorr)
 
 \item{Zmat}{A matrix containing the Zscores of all markers (in rows) in each environment (in columns).}
 
-\item{MatCorr}{The inter-environments correlation matrix. Can be computed using MetaGE.cor.}
+\item{MatCorr}{The inter-environments correlation matrix. Can be computed using \code{\link[=metaGE.cor]{metaGE.cor()}}.}
 }
 \value{
 A dataset of two columns containing the pvalue of the meta-regression test and the number of environment used to perform the test of all markers.
