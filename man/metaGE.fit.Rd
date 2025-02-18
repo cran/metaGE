@@ -37,6 +37,7 @@ Different tests may be performed:
 }
 }
 \examples{
+\dontrun{
 require(dplyr)
 # Import the data
 data("metaData")
@@ -51,5 +52,5 @@ head(FeDF \%>\% select(CHR, POS, MARKER, Mu, Tau, PVALUE))
 # Random Effect
 ReDF <- metaGE.fit(metaData, matCorr, Method = "Re")
 head(ReDF \%>\% select(CHR, POS, MARKER, Mu, Tau, PVALUE))
-
+}
 }

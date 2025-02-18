@@ -42,6 +42,7 @@ The heatmap
 The function metaGE.heatmap displays the heatmap of the zscores, the estimated marker effects or the pvalues of each markers (in rows) in each environments (in columns).
 }
 \examples{
+\dontrun{
 require(dplyr)
 # Import the data
 data("metaData")
@@ -59,4 +60,5 @@ Signif <-  FeDF$PVALUE \%>\% p.adjust(method = "BH") \%>\% `<`(Alpha) \%>\% whic
 # Draw the z-scores heatmap of the significant markers
 heatmap <- metaGE.heatmap(Data = FeDF[Signif,],
                          Prefix = "Z.")
+}                          
 }

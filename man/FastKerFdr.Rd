@@ -4,7 +4,14 @@
 \alias{FastKerFdr}
 \title{FastKerFdr}
 \usage{
-FastKerFdr(Z, p0, plotting = FALSE, NbKnot = 1e+05, tol = 1e-05)
+FastKerFdr(
+  Z,
+  p0,
+  plotting = FALSE,
+  NbKnot = 1e+05,
+  tol = 1e-05,
+  max_iter = 10000
+)
 }
 \arguments{
 \item{Z}{A vector containing Zscores}
@@ -16,6 +23,8 @@ FastKerFdr(Z, p0, plotting = FALSE, NbKnot = 1e+05, tol = 1e-05)
 \item{NbKnot}{The (maximum) number of knot for the kde procedure.(1e5 by default)}
 
 \item{tol}{a tolerance value for convergence (1e-5 by default)}
+
+\item{max_iter}{the maximum number of iterations allowed for the algorithm to converge or complete its process.(Default is 1e4.)}
 }
 \value{
 tau is the vector of H1 posteriors

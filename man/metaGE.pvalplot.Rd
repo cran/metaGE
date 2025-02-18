@@ -18,6 +18,7 @@ No return value, the plot is displayed in the active graphics window.
 The function metaGE.pvalplot displays the pvalue distribution and the QQplot of the -log10(pvalues).
 }
 \examples{
+\dontrun{
 # Import the data
 data("metaData")
 
@@ -29,4 +30,5 @@ FeDF <- metaGE.fit(metaData, matCorr, Method = "Fe")
 
 # Check the pvalues
 metaGE.pvalplot(Pvalues = FeDF$PVALUE, Main= "Pvalue Fe")
+}
 }

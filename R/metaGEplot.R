@@ -43,6 +43,7 @@ MakeQQplot <- function(Pvalues,Name=NULL,Xrange=NULL,Yrange=NULL){
 #' @return No return value, the plot is displayed in the active graphics window.
 #' @export
 #' @examples
+#' \dontrun{
 #' # Import the data
 #' data("metaData")
 #'
@@ -54,6 +55,7 @@ MakeQQplot <- function(Pvalues,Name=NULL,Xrange=NULL,Yrange=NULL){
 #'
 #' # Check the pvalues
 #' metaGE.pvalplot(Pvalues = FeDF$PVALUE, Main= "Pvalue Fe")
+#' }
 
 metaGE.pvalplot <- function(Pvalues, Main=''){
   # #Save the user graphical parameters
@@ -86,6 +88,7 @@ metaGE.pvalplot <- function(Pvalues, Main=''){
 #' @importFrom gplots heatmap.2
 #' @importFrom grDevices colorRampPalette
 #' @examples
+#' \dontrun{
 #' require(dplyr)
 #' # Import the data
 #' data("metaData")
@@ -103,6 +106,8 @@ metaGE.pvalplot <- function(Pvalues, Main=''){
 #' # Draw the z-scores heatmap of the significant markers
 #'heatmap <- metaGE.heatmap(Data = FeDF[Signif,],
 #'                          Prefix = "Z.")
+#'}                          
+
 
 metaGE.heatmap <- function(Data, Prefix='Z.', EnvGroups=NULL, QTLsVarName=NULL,RowOrder=TRUE, ColOrder = TRUE,ShowDendrogram=FALSE, Colors=c("red","black","green"),Main=""){
   
@@ -234,6 +239,7 @@ metaGE.heatmap <- function(Data, Prefix='Z.', EnvGroups=NULL, QTLsVarName=NULL,R
 #' @importFrom qqman manhattan
 #' @importFrom ggrepel geom_label_repel
 #' @examples
+#' \dontrun{
 #' require(dplyr)
 #' # Import the data
 #' data("metaData")
@@ -249,14 +255,14 @@ metaGE.heatmap <- function(Data, Prefix='Z.', EnvGroups=NULL, QTLsVarName=NULL,R
 #' Signif <-  FeDF$PVALUE %>% p.adjust(method = "BH") %>% `<`(Alpha) %>% which
 #'
 #' # Draw the corresponding manhattan plot
-#' #PvalThresholdFe <- FeDF[Signif,]$PVALUE%>% max %>% max(.,0)
-#' #manhattan_pval <- metaGE.manhattan(Data = FeDF,VarName = 'PVALUE',
-#' #                             Threshold = PvalThresholdFe,
-#' #                              Main = '-log10(Pval) alongside the chromosome Fe method')
+#' PvalThresholdFe <- FeDF[Signif,]$PVALUE%>% max %>% max(.,0)
+#' manhattan_pval <- metaGE.manhattan(Data = FeDF,VarName = 'PVALUE',
+#'                              Threshold = PvalThresholdFe,
+#'                               Main = '-log10(Pval) alongside the chromosome Fe method')
 #'
 #'
-#'# Compute the score local
-#' \dontrun{xi <- 2
+#' # Compute the score local
+#' xi <- 2
 #' FeScore <- metaGE.lscore(FeDF,"PVALUE", xi)
 #'
 #' # Draw the corresponding manhattan plot
@@ -350,7 +356,7 @@ metaGE.manhattan <- function(Data, VarName, Threshold=NULL,SigZones=NULL,Score =
 
     # Add vertical lines to annotate markers
     if(!is.null(AnnotateMarkers)){
-      manhattan <- manhattan + geom_segment(data = AnnotateMarker_info,aes(x = .data$POScum, xend=.data$POScum,y=0.05, yend=Inf),
+      manhattan <- manhattan + geom_segment(data = AnnotateMarker_info,aes(x = .data$POScum, xend=.data$POScum,y=min(-log10(don$VarToPlot)), yend=Inf),
                                             linewidth=0.8,color= yarrr::transparent("red2", trans.val = .3),linetype=2) 
     }
     # Add a threshold
@@ -402,7 +408,7 @@ metaGE.manhattan <- function(Data, VarName, Threshold=NULL,SigZones=NULL,Score =
       )
     # Add vertical lines to annotate markers
     if(!is.null(AnnotateMarkers)){
-      manhattan <- manhattan + geom_segment(data = AnnotateMarker_info,aes(x = .data$POScum, xend=.data$POScum,y=0.05, yend=Inf),
+      manhattan <- manhattan + geom_segment(data = AnnotateMarker_info,aes(x = .data$POScum, xend=.data$POScum,y=min(don$VarToPlot), yend=Inf),
                                             linewidth=0.8,color= yarrr::transparent("red2", trans.val = .3),linetype=2) 
     }
     # Add a threshold

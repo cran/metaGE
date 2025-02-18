@@ -13,13 +13,14 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c("."))
 #' @param plotting A boolean saying to plot or not (FALSE by default)
 #' @param NbKnot The (maximum) number of knot for the kde procedure.(1e5 by default)
 #' @param tol a tolerance value for convergence (1e-5 by default)
+#' @param max_iter the maximum number of iterations allowed for the algorithm to converge or complete its process.(Default is 1e4.)
 #' @return  tau is the vector of H1 posteriors
 #' @import graphics
 #' @importFrom ks kde
 #' @importFrom stats dnorm
 
 
-FastKerFdr <- function(Z,p0,plotting=FALSE,NbKnot=1e5,tol = 1e-5){
+FastKerFdr <- function(Z,p0,plotting=FALSE,NbKnot=1e5,tol = 1e-5,max_iter = 1e4){
 
   ## Get the data and remove the NAs
   n.all <- length(Z)
@@ -40,24 +41,36 @@ FastKerFdr <- function(Z,p0,plotting=FALSE,NbKnot=1e5,tol = 1e-5){
     Knots <- Knots[Order]
     Counts <- Counts[Order]
   }
-
+  
+  h <- ks::hpi(Z)
+  
   ## Initialize the taus
-  phi = stats::dnorm(Knots)
-  MaxKnot=range(Knots) %>% abs %>% max
+  phi <-  stats::dnorm(Knots)
+  MaxKnot <- range(Knots) %>% abs %>% max
   tau <- sign(Knots)*0.8*Knots/MaxKnot+0.1
 
   ## Get the weighted kernel density estimate
-  diff = 2*tol; iter = 0
-  while(diff > tol){
-    iter = iter + 1
-    weights = tau*Counts; weights = ActualNbKnot * weights / sum(weights)
-    f1 = ks::kde(x=Knots, w=weights, eval.points=Knots)$estimate
-    tauNew = p1*f1/(p0*phi + p1*f1)
-    ## Dirty job 1: get rid of the f1 mass on the left
-    #tauNew[Knots< -3] <- 0
-    diff = max(abs(tau - tauNew))
-    tau = tauNew
+  diff <- 2 * tol
+  iter <- 0
+  while(diff > tol & iter <= max_iter){
+    iter <- iter + 1
+    
+    weights <- tau*Counts
+    weights <- ActualNbKnot * weights / sum(weights)
+    
+    f1 <- ks::kde(x=Knots, w=weights, eval.points=Knots, h=h)$estimate
+    f1[f1 < 0] <- 0
+    
+    tauNew <- p1*f1/(p0*phi + p1*f1)
+
+    diff <- max(abs(tau - tauNew))
+    tau <- tauNew
   }
+  
+  if (iter > max_iter & diff > tol) {
+    message(paste0("Warning: The algorithm did not converge within max_iter=", max_iter, "."))
+  }
+  
   if(plotting){
     Hist.fig <- hist(Z, freq=TRUE, breaks=sqrt(n), main='', border=8,
                      xlab="Q-transformed pvalues", ylab="Densities")
@@ -70,12 +83,12 @@ FastKerFdr <- function(Z,p0,plotting=FALSE,NbKnot=1e5,tol = 1e-5){
   }
 
   ## Now get the f1 estimate
-  KDE = kde(x=Knots, w=weights, eval.points=Z)
-  f1 = KDE$estimate
-
+  KDE <- ks::kde(x=Knots, w=weights, eval.points=Z)
+  f1 <- ks::dkde(x = Z, fhat = KDE)
+  
   ## Dirty job 2: get rid of numeric problems
   f1[f1<0] <- 1e-30
-  tau = p1*f1 / (p1*f1 + p0*dnorm(Z))
+  tau <- p1*f1 / (p1*f1 + p0*dnorm(Z))
 
   ## Add the NA
   tau.all <- rep(NA,n.all)
@@ -108,7 +121,7 @@ GetH0Items <- function(Zmat, Threshold=0.8, plotting=FALSE,Cores=NULL){
   ## Get p0 estimates
   p0 <- rep(0, Q)
   for (q in 1:Q){
-    p0[q] = min(sum(abs(Zmat[,q]) < stats::qnorm(p = 0.975),na.rm=TRUE)/(0.95*sum(!is.na(Zmat[,q]))),1-1/sum(!is.na(Zmat[,q])))
+    p0[q] <- min(sum(abs(Zmat[,q]) < stats::qnorm(p = 0.975),na.rm=TRUE)/(0.95*sum(!is.na(Zmat[,q]))),1-1/sum(!is.na(Zmat[,q])))
   }
 
   ## Fit a 2-component mixture to each test serie using kerFdr
@@ -119,7 +132,7 @@ GetH0Items <- function(Zmat, Threshold=0.8, plotting=FALSE,Cores=NULL){
   }else if(Cores>1 & Cores <= availableCores() ){
     future::plan(multicore,workers= Cores)
   }
-  GetTheTaus <- purrr::map(1:Q, ~ FastKerFdr(Zmat[, .x], p0=p0[.x], plotting=FALSE))
+  GetTheTaus <- furrr::future_map(1:Q, ~ FastKerFdr(Zmat[, .x], p0=p0[.x], plotting=FALSE))
   plan("default")
 
   #### Step 2: get the null guys
@@ -131,7 +144,7 @@ GetH0Items <- function(Zmat, Threshold=0.8, plotting=FALSE,Cores=NULL){
   H0Items <- purrr::map(Threshold, H0Filter)
   ##ALTERNATIVE FILTER
   #Tmp <- GetTheTaus %>% map(~ which(.x>Threshold)) %>% reduce(c) %>% table
-  #H0Items <- names(toto)[which(toto>floor(0.15*length(GetTheTaus)))] %>%
+  #H0Items <- names(Tmp)[which(Tmp>floor(0.15*length(GetTheTaus)))] %>%
   #  as.numeric %>%
   #  setdiff(1:n,.)
 
@@ -152,10 +165,11 @@ GetH0Items <- function(Zmat, Threshold=0.8, plotting=FALSE,Cores=NULL){
 #' @export
 #' @examples
 #' require(corrplot)
+#' \dontrun{
 #' data("metaData")
 #' Threshold <- 0.8
-#' matCorr <- metaGE.cor(metaData, Threshold = Threshold)
-#' #corrplot(matCorr,order = "hclust")
+#' matCorr <- metaGE.cor(Data, Threshold = Threshold)
+#' corrplot(matCorr,order = "hclust")}
 
 metaGE.cor<- function(Data,
                          Threshold = 0.6,

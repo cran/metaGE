@@ -45,6 +45,7 @@ The Manhattan plot.
 The function metaGE.manhattan displays the Manhattan plot of the -log10(p-value) or the local score of each marker along the genome.
 }
 \examples{
+\dontrun{
 require(dplyr)
 # Import the data
 data("metaData")
@@ -60,14 +61,14 @@ Alpha <- 0.05
 Signif <-  FeDF$PVALUE \%>\% p.adjust(method = "BH") \%>\% `<`(Alpha) \%>\% which
 
 # Draw the corresponding manhattan plot
-#PvalThresholdFe <- FeDF[Signif,]$PVALUE\%>\% max \%>\% max(.,0)
-#manhattan_pval <- metaGE.manhattan(Data = FeDF,VarName = 'PVALUE',
-#                             Threshold = PvalThresholdFe,
-#                              Main = '-log10(Pval) alongside the chromosome Fe method')
+PvalThresholdFe <- FeDF[Signif,]$PVALUE\%>\% max \%>\% max(.,0)
+manhattan_pval <- metaGE.manhattan(Data = FeDF,VarName = 'PVALUE',
+                             Threshold = PvalThresholdFe,
+                              Main = '-log10(Pval) alongside the chromosome Fe method')
 
 
 # Compute the score local
-\dontrun{xi <- 2
+xi <- 2
 FeScore <- metaGE.lscore(FeDF,"PVALUE", xi)
 
 # Draw the corresponding manhattan plot
