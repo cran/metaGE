@@ -84,7 +84,7 @@ FastKerFdr <- function(Z,p0,plotting=FALSE,NbKnot=1e5,tol = 1e-5,max_iter = 1e4)
 
   ## Now get the f1 estimate
   KDE <- ks::kde(x=Knots, w=weights, eval.points=Z)
-  f1 <- ks::dkde(x = Z, fhat = KDE)
+  f1 <- KDE$estimate
   
   ## Dirty job 2: get rid of numeric problems
   f1[f1<0] <- 1e-30
@@ -127,9 +127,9 @@ GetH0Items <- function(Zmat, Threshold=0.8, plotting=FALSE,Cores=NULL){
   ## Fit a 2-component mixture to each test serie using kerFdr
   if(is.null(Cores)){
     if(future::availableCores()>2){
-      future::plan(multicore, workers= availableCores()-1)
+      future::plan(multicore, workers= future::availableCores()-1)
     }
-  }else if(Cores>1 & Cores <= availableCores() ){
+  }else if(Cores>1 & Cores <= future::availableCores() ){
     future::plan(multicore,workers= Cores)
   }
   GetTheTaus <- furrr::future_map(1:Q, ~ FastKerFdr(Zmat[, .x], p0=p0[.x], plotting=FALSE))
@@ -165,11 +165,10 @@ GetH0Items <- function(Zmat, Threshold=0.8, plotting=FALSE,Cores=NULL){
 #' @export
 #' @examples
 #' require(corrplot)
-#' \dontrun{
 #' data("metaData")
 #' Threshold <- 0.8
-#' matCorr <- metaGE.cor(Data, Threshold = Threshold)
-#' corrplot(matCorr,order = "hclust")}
+#' matCorr <- metaGE.cor(metaData, Threshold = Threshold)
+#' corrplot(matCorr,order = "hclust")
 
 metaGE.cor<- function(Data,
                          Threshold = 0.6,

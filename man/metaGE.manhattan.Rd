@@ -45,7 +45,6 @@ The Manhattan plot.
 The function metaGE.manhattan displays the Manhattan plot of the -log10(p-value) or the local score of each marker along the genome.
 }
 \examples{
-\dontrun{
 require(dplyr)
 # Import the data
 data("metaData")
@@ -75,8 +74,4 @@ FeScore <- metaGE.lscore(FeDF,"PVALUE", xi)
 manhattan_lscore <- metaGE.manhattan(Data = FeScore$Data,VarName = 'SCORE',
                                      SigZones = FeScore$SigZones, Score = TRUE,
                                      Main = 'Local score alongside the chromosome Fe method')
-}
-
-
-
 }

@@ -39,7 +39,6 @@ to be selected in 1,2,3,4 and the autocorrelation is computed internally.
 }
 \examples{
 require(dplyr)
-\dontrun{
 # Import the data
 data("metaData")
 
@@ -52,5 +51,5 @@ FeDF <- metaGE.fit(metaData, matCorr, Method = "Fe")
 # Compute the score local
 xi <- 2
 FeScore <- metaGE.lscore(FeDF,"PVALUE", xi)
-#FeScore$SigZones}
+#FeScore$SigZones
 }

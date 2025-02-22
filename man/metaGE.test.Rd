@@ -43,7 +43,6 @@ If \code{Incidence} is provided, the function will perform all the corresponding
 The \code{Contrast} can be \code{NULL}, in this case the identity matrix is used.
 }
 \examples{
-\dontrun{
 require(dplyr)
 
  # Import the data
@@ -65,5 +64,4 @@ head(ContrastDF \%>\% select(CHR, POS, MARKER, PVALUE.Contrast1))
 #### Regression test
 RegressionDF <- metaGE.test(metaData,matCorr, Covariate = envDesc[,c(1,5)],EnvName = "ShortName" )
 head(RegressionDF \%>\% select(CHR, POS, MARKER, PVALUE.Tnight.mean))
-}
 }

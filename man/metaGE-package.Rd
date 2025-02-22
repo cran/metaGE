@@ -6,7 +6,7 @@
 \alias{metaGE-package}
 \title{metaGE: Meta-Analysis for Detecting Genotype x Environment Associations}
 \description{
-Provides functions to perform all steps of genome-wide association meta-analysis for studying Genotype x Environment interactions, from collecting the data to the manhattan plot. The procedure accounts for the potential correlation between studies. In addition to the Fixed and Random models, one can investigate the relationship between QTL effects and some qualitative or quantitative covariate via the test of contrast and the meta-regression, respectively. The methodology is available from: (De Walsche, A., et al. (2023) \doi{10.1101/2023.03.01.530237}).
+Provides functions to perform all steps of genome-wide association meta-analysis for studying Genotype x Environment interactions, from collecting the data to the manhattan plot. The procedure accounts for the potential correlation between studies. In addition to the Fixed and Random models, one can investigate the relationship between QTL effects and some qualitative or quantitative covariate via the test of contrast and the meta-regression, respectively. The methodology is available from: (De Walsche, A., et al. (2025) \doi{10.1371/journal.pgen.1011553}).
 }
 \details{
 The main functions of the package corresponding to the steps of a genome-wide association meta-analysis are:

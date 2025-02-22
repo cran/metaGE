@@ -531,7 +531,6 @@ RegressionStatTestNA <-
 #' @importFrom data.table setnames
 #' @export
 #' @examples
-#' \dontrun{
 #' require(dplyr)
 #'
 #'  # Import the data
@@ -553,7 +552,6 @@ RegressionStatTestNA <-
 #' #### Regression test
 #' RegressionDF <- metaGE.test(metaData,matCorr, Covariate = envDesc[,c(1,5)],EnvName = "ShortName" )
 #' head(RegressionDF %>% select(CHR, POS, MARKER, PVALUE.Tnight.mean))
-#' }
 
 
 metaGE.test <-

@@ -23,9 +23,8 @@ This function infer the inter-environment correlation matrix from the z-scores a
 }
 \examples{
 require(corrplot)
-\dontrun{
 data("metaData")
 Threshold <- 0.8
-matCorr <- metaGE.cor(Data, Threshold = Threshold)
-corrplot(matCorr,order = "hclust")}
+matCorr <- metaGE.cor(metaData, Threshold = Threshold)
+corrplot(matCorr,order = "hclust")
 }

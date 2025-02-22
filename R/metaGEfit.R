@@ -44,7 +44,6 @@ LLikelihoodT_vect <- function(Zmat, Delta, P,Mu, Tau){
 #' @importFrom stats qnorm pnorm pchisq
 #' @importFrom emdbook pchibarsq
 #' @examples
-#' \dontrun{
 #' require(dplyr)
 #' # Import the data
 #' data("metaData")
@@ -59,7 +58,6 @@ LLikelihoodT_vect <- function(Zmat, Delta, P,Mu, Tau){
 #' # Random Effect
 #' ReDF <- metaGE.fit(metaData, matCorr, Method = "Re")
 #' head(ReDF %>% select(CHR, POS, MARKER, Mu, Tau, PVALUE))
-#'}
 
 metaGE.fit <-
   function(Data,

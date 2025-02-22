@@ -43,7 +43,6 @@ MakeQQplot <- function(Pvalues,Name=NULL,Xrange=NULL,Yrange=NULL){
 #' @return No return value, the plot is displayed in the active graphics window.
 #' @export
 #' @examples
-#' \dontrun{
 #' # Import the data
 #' data("metaData")
 #'
@@ -55,7 +54,7 @@ MakeQQplot <- function(Pvalues,Name=NULL,Xrange=NULL,Yrange=NULL){
 #'
 #' # Check the pvalues
 #' metaGE.pvalplot(Pvalues = FeDF$PVALUE, Main= "Pvalue Fe")
-#' }
+
 
 metaGE.pvalplot <- function(Pvalues, Main=''){
   # #Save the user graphical parameters
@@ -88,7 +87,6 @@ metaGE.pvalplot <- function(Pvalues, Main=''){
 #' @importFrom gplots heatmap.2
 #' @importFrom grDevices colorRampPalette
 #' @examples
-#' \dontrun{
 #' require(dplyr)
 #' # Import the data
 #' data("metaData")
@@ -106,7 +104,7 @@ metaGE.pvalplot <- function(Pvalues, Main=''){
 #' # Draw the z-scores heatmap of the significant markers
 #'heatmap <- metaGE.heatmap(Data = FeDF[Signif,],
 #'                          Prefix = "Z.")
-#'}                          
+#'                         
 
 
 metaGE.heatmap <- function(Data, Prefix='Z.', EnvGroups=NULL, QTLsVarName=NULL,RowOrder=TRUE, ColOrder = TRUE,ShowDendrogram=FALSE, Colors=c("red","black","green"),Main=""){
@@ -215,7 +213,7 @@ metaGE.heatmap <- function(Data, Prefix='Z.', EnvGroups=NULL, QTLsVarName=NULL,R
                                              main = Main,
                                              colsep = NbEnvPerGroups,
                                              rowsep = RowSplit,
-                                             density.info = "none",key.title = NA,keysize = 1,margins = c(5,7) ))
+                                             density.info = "none",key.title = NA,margins = c(5,7) ))
     return(HM)
   }
   
@@ -239,7 +237,6 @@ metaGE.heatmap <- function(Data, Prefix='Z.', EnvGroups=NULL, QTLsVarName=NULL,R
 #' @importFrom qqman manhattan
 #' @importFrom ggrepel geom_label_repel
 #' @examples
-#' \dontrun{
 #' require(dplyr)
 #' # Import the data
 #' data("metaData")
@@ -269,10 +266,7 @@ metaGE.heatmap <- function(Data, Prefix='Z.', EnvGroups=NULL, QTLsVarName=NULL,R
 #' manhattan_lscore <- metaGE.manhattan(Data = FeScore$Data,VarName = 'SCORE',
 #'                                      SigZones = FeScore$SigZones, Score = TRUE,
 #'                                      Main = 'Local score alongside the chromosome Fe method')
-#'}
-#'
-#'
-#'
+
 
 
 metaGE.manhattan <- function(Data, VarName, Threshold=NULL,SigZones=NULL,Score = FALSE, AnnotateMarkers=NULL, Main='', col=c("grey", "black"), colSigZones='blue', Ylim=NULL){
@@ -372,7 +366,7 @@ metaGE.manhattan <- function(Data, VarName, Threshold=NULL,SigZones=NULL,Score =
       # Compute chromosome size
       width_box <- Data %>% group_by(.data$CHR) %>%
         summarise(chr_len=max(.data$POS)-min(.data$POS)) %>%
-        pull(.data$chr_len) %>% mean() * 0.01
+        pull(.data$chr_len) %>% mean() * 0.02
       
       
       for (i in 1:nrow(sigzones)){
@@ -423,7 +417,7 @@ metaGE.manhattan <- function(Data, VarName, Threshold=NULL,SigZones=NULL,Score =
       # Compute chromosome size
       width_box <- Data %>% group_by(.data$CHR) %>%
         summarise(chr_len=max(.data$POS)-min(.data$POS)) %>%
-        pull(.data$chr_len) %>% mean() * 0.01
+        pull(.data$chr_len) %>% mean() * 0.02
 
       for (i in 1:nrow(sigzones)){
         manhattan <- manhattan + geom_rect(data=data.frame(xmin=max(sigzones$Startcum[i]-width_box,0),
